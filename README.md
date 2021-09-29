@@ -1,4 +1,4 @@
-# go-ima!
+# go-ima
 
 ![goima](https://user-images.githubusercontent.com/6634325/135240204-9f9512fc-07b1-4e31-ac18-f6c5fbfb7d0c.png)
 
