@@ -69,16 +69,17 @@ func main() {
 		measurments = append(measurments, newMeasurment)
 	}
 
-	if err = validateFile(fileToCheck, measurments); err != nil {
-		fmt.Println("Failed - file has been modified")
-	} else {
-		fmt.Println("Passed - file has not been modified")
-	}
-
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
 
+	if err = validateFile(fileToCheck, measurments); err != nil {
+		fmt.Println("Failed - file has been modified")
+		os.Exit(1)
+	} else {
+		fmt.Println("Passed - file has not been modified")
+		os.Exit(0)
+	}
 }
 
 //check return an eror if validation fails
