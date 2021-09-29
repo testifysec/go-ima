@@ -6,7 +6,8 @@ Tool that checks the ima-log to see if a file has been tampered with.
 
 1. Set the IMA policy to `tcb` by configuring GRUB  `GRUB_CMDLINE_LINUX="ima_policy=tcb ima_hash=sha256 ima=on"`
 2. Compile
-3. Run
+3. Grant permissions to read `/sys/kernel/security/integrity/ima/ascii_runtime_measurements`
+4. Run
 
 ```
 ./go-ima {file to check}
