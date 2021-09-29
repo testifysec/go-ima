@@ -74,16 +74,16 @@ func main() {
 	}
 
 	if err = validateFile(fileToCheck, measurments); err != nil {
-		fmt.Println("Failed - file has been modified")
-		os.Exit(1)
+		log.Fatalf("Validation Erorr: %v", err)
 	} else {
-		fmt.Println("Passed - file has not been modified")
 		os.Exit(0)
 	}
 }
 
 //check return an eror if validation fails
 func validateFile(fn string, ms []measurment) error {
+	inMemory := false
+	checksumError := false
 	f, err := os.Open(fn)
 	if err != nil {
 		log.Fatalf("Error reading IMA file, %v", err)
@@ -92,12 +92,12 @@ func validateFile(fn string, ms []measurment) error {
 
 	fileToCheck, err := filepath.Abs(f.Name())
 	if err != nil {
-		return err
+		log.Fatalf("Error reading IMA file, %v", err)
 	}
 
 	h := sha256.New()
 	if _, err := io.Copy(h, f); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error reading IMA file, %v", err)
 	}
 
 	data := []byte{}
@@ -106,24 +106,23 @@ func validateFile(fn string, ms []measurment) error {
 
 	for _, m := range ms {
 		if m.fileName == fileToCheck {
-			if !Equal(shasum, m.fileChecksum) {
-				return errors.New("Validation Error")
+			inMemory = true
+			disk := fmt.Sprintf("%x", shasum)
+			ima := string(m.fileChecksum)
+			if ima != disk {
+				fmt.Printf("Disk: %x\n", shasum)
+				fmt.Printf("IMA : %s\n", m.fileChecksum)
+				checksumError = true
 			}
+
 		}
+	}
+	if checksumError {
+		return errors.New("checksum error")
+	}
+
+	if !inMemory {
+		return errors.New("not in memory")
 	}
 	return nil
-}
-
-func Equal(slice1 []byte, slice2 []byte) bool {
-	sl1 := slice1[:]
-	if len(sl1) != len(slice2) {
-		return false
-	}
-
-	for i := range slice1 {
-		if sl1[i] != slice2[i] {
-			return false
-		}
-	}
-	return true
 }
