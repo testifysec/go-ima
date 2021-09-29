@@ -1,6 +1,6 @@
 # go-ima
 
-Simple too that checks the ima-log to see if a file has been tampered with.
+Tool that checks the ima-log to see if a file has been tampered with.
 
 ## How to use
 
@@ -14,3 +14,7 @@ Simple too that checks the ima-log to see if a file has been tampered with.
 
 You will get an exit status of 0 if the file has not been modified since inception or boot.  If you get an Exit status of zero id means the IMA log contains at least one hash that does not match what is on disk.  This could either be the sign of an attack, or somebody just editing files on your build server.
 
+## Limitations
+
+- Support for verifying against PCR register
+- Support for different hash schemes
