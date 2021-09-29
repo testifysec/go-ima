@@ -74,7 +74,7 @@ func main() {
 	}
 
 	if err = validateFile(fileToCheck, measurments); err != nil {
-		log.Fatalf("Validation Erorr: %v", err)
+		log.Fatalf("Validation Error: %v", err)
 	} else {
 		os.Exit(0)
 	}
