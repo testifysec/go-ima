@@ -177,41 +177,37 @@ func (mL *measurmentLog) calcAggr() {
 	fmt.Printf("%x", runningHash)
 }
 
+//hashExtend takes in two hex encoded strings and returns the hex encoded string SHA1 Sum of the concat
+func hashExtend(h1 string, h2 string) string {
+	b1, err := hex.DecodeString(h1)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	b2, err := hex.DecodeString(h2)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	concat := append(b1, b2...)
+	if err != nil {
+		log.Fatalf("%v", err)
+
+	}
+	ret := sha1.Sum([]byte(hex.EncodeToString(concat)))
+
+	return string(ret[:])
+
+}
+
 func testHash() {
 	//https://elixir.bootlin.com/linux/v5.14.9/source/security/integrity/ima/ima.h
 	//https://stackoverflow.com/questions/10163436/how-can-a-the-extension-of-the-pcr-value-be-replicated-with-e-g-sha1sum
 
 	v := "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
 	x := "7c211433f02071597741e6ff5a8ea34789abbf43"
-	s := "39955b37b910e57748368b0922fd44fbff72bda5"
+	//s := "39955b37b910e57748368b0922fd44fbff72bda5"
 
-	h0, err := hex.DecodeString(s)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	h1, err := hex.DecodeString(v)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	h2, err := hex.DecodeString(x)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	h3 := append(h1, h2...)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	h3str := hex.EncodeToString(h3)
-	h4 := sha1.Sum([]byte(h3str))
-
-	fmt.Printf("%x\n", h0)
-	fmt.Printf("%x\n", h1)
-	fmt.Printf("%x\n", h2)
-	fmt.Printf("%x\n", h3)
-	fmt.Printf("%s\n", hex.EncodeToString(h4[:]))
+	fmt.Printf("%x\n", hashExtend(v, x))
 
 }
