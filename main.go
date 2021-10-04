@@ -1,5 +1,7 @@
 package main
 
+// sudo gotpm read pcr --hash-algo sha1 --pcrs 10
+
 import (
 	"bufio"
 	"bytes"
@@ -161,13 +163,7 @@ func (mL *measurmentLog) calcAggr() {
 	for _, m := range mL.measurments {
 
 		if m.imaPolicyName == "ima-ng" {
-			runningHash, err = hex.DecodeString(fmt.Sprintf("%x%x", runningHash, m.fileChecksum))
-			if err != nil {
-				log.Fatalf("Error decoding HEX String, %v", err)
-			}
-			h := sha1.Sum(runningHash)
-			runningHash = h[:]
-
+			runningHash = []byte(hashExtend(hex.EncodeToString(runningHash), hex.EncodeToString(m.fileChecksum)))
 		} else {
 			fmt.Println(m.imaPolicyName)
 		}
