@@ -50,7 +50,7 @@ func main() {
 		algocheck := strings.Split(fields[3], ":")
 		if len(algocheck) < 2 {
 			if err != nil {
-				log.Fatalf("Error reading IMA file, algohash array to short")
+				log.Fatalf("Error reading IMA file, algohash array is too short")
 			}
 		}
 		algo := algocheck[0]
